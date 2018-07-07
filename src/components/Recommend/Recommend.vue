@@ -1,26 +1,115 @@
 <template>
-  <div>
-    <slide>
-      <div v-for="item in 5">
-        {{item}}
-        <!--<a :href="item.linkUrl">
-          <img class="needsclick" @load="loadImage" :src="item.picUrl">
-        </a>-->
+  <div class="scroll-wrap">
+    <scroll :data="discList" class="scroll-container">
+      <div>
+        <div v-if="slideList.length">
+          <slide>
+            <div v-for="item in slideList">
+              <img :src="item.picUrl" alt="">
+            </div>
+          </slide>
+        </div>
+        <div class="recommend-list">
+          <h1 class="list-title">热门歌单推荐</h1>
+          <ul>
+            <li v-for="item in discList" class="item">
+              <div class="icon">
+                <img width="60" height="60" v-lazy="item.imgurl">
+              </div>
+              <div class="text">
+                <h2 class="name" v-html="item.creator.name"></h2>
+                <p class="desc" v-html="item.dissname"></p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-    </slide>
+    </scroll>
   </div>
 </template>
 
 <script>
-    import slide from '@/base/Slide/Slide'
-    export default {
-      name: "recommend",
-      components: {
-        slide
+  import slide from '@/base/Slide/Slide'
+  import Scroll from '@/base/scroll/scroll'
+  import {getRecommoned,getDiscList} from '@/api/getRecommoned.js'
+  import {ERR_ON} from '@/api/config.js'
+
+  export default {
+    name: "recommend",
+    components: {
+      slide,Scroll
+    },
+    data() {
+      return {
+        slideList: [],
+        discList: []
+      }
+    },
+    created() {
+      this._getSlideList();
+      this._getDescList();
+    },
+    methods: {
+      _getSlideList() {
+        getRecommoned().then((res) => {
+          if (res.code === ERR_ON) {
+            this.slideList = res.data.slider
+          }
+        })
+      },
+      _getDescList(){
+        getDiscList().then((res, err) => {
+          this.discList = res.data.list;
+        })
       }
     }
+  }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+  .scroll-wrap{
+    position:fixed;
+    top:88px;
+    left:0;right:0;bottom:0;
+    .scroll-container{
+      height:100%;
+      overflow: hidden;
+    }
+  }
+  .recommend-list{
+    .list-title{
+      height: 65px;
+      line-height: 65px;
+      text-align: center;
+      font-size: 14px;
+      color: #ffcd32;
+    }
+    .item{
+      display: flex;
+      box-sizing: border-box;
+      align-items: center;
+      padding: 0 20px 20px 20px;
+      .icon{
+        flex: 0 0 60px;
+        width: 60px;
+        padding-right: 20px;
+      }
+      .text{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+        line-height: 20px;
+        overflow: hidden;
+        font-size: 14px;
+      }
+      .name{
+        margin-bottom: 10px;
+        color: #fff;
+      }
+      .desc{
+        color: rgba(255, 255, 255, 0.3)
+      }
+    }
+  }
 </style>
