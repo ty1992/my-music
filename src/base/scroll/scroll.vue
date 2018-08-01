@@ -6,61 +6,70 @@
 
 <script>
 
-    import BScroll from 'better-scroll'
-    export default {
-      name: "scroll",
-      props: {
-        probeType: {
-          type: Number,
-          default: 1
-        },
-        click: {
-          type: Boolean,
-          default: true
-        },
-        listenScroll: {
-          type: Boolean,
-          default: false
-        },
-        data: {
-          type: Array,
-          default: null
-        },
-        pullup: {
-          type: Boolean,
-          default: false
-        },
-        beforeScroll: {
-          type: Boolean,
-          default: false
-        },
-        refreshDelay: {
-          type: Number,
-          default: 20
-        }
+  import BScroll from 'better-scroll'
+
+  export default {
+    name: "scroll",
+    props: {
+      probeType: {
+        type: Number,
+        default: 1
       },
-      mounted(){
-        this.$nextTick(function(){
-          this._initScroll();
+      click: {
+        type: Boolean,
+        default: true
+      },
+      listenScroll: {
+        type: Boolean,
+        default: false
+      },
+      data: {
+        type: Array,
+        default: null
+      },
+      pullup: {
+        type: Boolean,
+        default: false
+      },
+      beforeScroll: {
+        type: Boolean,
+        default: false
+      },
+      refreshDelay: {
+        type: Number,
+        default: 20
+      }
+    },
+    mounted() {
+      this.$nextTick(function () {
+        this._initScroll();
+      })
+    },
+    methods: {
+      _initScroll() {
+        this.scroll = new BScroll(this.$refs.scroll, {
+          probeType: this.probeType,
+          click: this.click
         })
-      },
-      methods: {
-        _initScroll(){
-            //var scroll = document.querySelector('.scroll');
-            this.scroll = new BScroll(this.$refs.scroll)
-          },
-        refresh() {
-          this.scroll && this.scroll.refresh()
+        if (this.listenScroll) {
+          let me = this
+          this.scroll.on('scroll', (pos) => {
+            me.$emit('scroll', pos)
+          })
         }
       },
-      watch: {
-        data() {
-          setTimeout(() => {
-            this.refresh()
-          }, this.refreshDelay)
-        }
+      refresh() {
+        this.scroll && this.scroll.refresh()
+      }
+    },
+    watch: {
+      data() {
+        setTimeout(() => {
+          this.refresh()
+        }, this.refreshDelay)
       }
     }
+  }
 </script>
 
 <style scoped>

@@ -11,7 +11,7 @@
         </div>
         <div class="recommend-list">
           <h1 class="list-title">热门歌单推荐</h1>
-          <ul>
+          <ul v-if="discList.length">
             <li v-for="item in discList" class="item">
               <div class="icon">
                 <img width="60" height="60" v-lazy="item.imgurl">
@@ -22,6 +22,7 @@
               </div>
             </li>
           </ul>
+          <loading v-else></loading>
         </div>
       </div>
     </scroll>
@@ -30,14 +31,15 @@
 
 <script>
   import slide from '@/base/Slide/Slide'
+  import loading from '@/components/loading/loading'
   import Scroll from '@/base/scroll/scroll'
-  import {getRecommoned,getDiscList} from '@/api/getRecommoned.js'
+  import {getRecommoned, getDiscList} from '@/api/getRecommoned.js'
   import {ERR_ON} from '@/api/config.js'
 
   export default {
     name: "recommend",
     components: {
-      slide,Scroll
+      slide, Scroll, loading
     },
     data() {
       return {
@@ -57,7 +59,7 @@
           }
         })
       },
-      _getDescList(){
+      _getDescList() {
         getDiscList().then((res, err) => {
           this.discList = res.data.list;
         })
@@ -67,34 +69,37 @@
 </script>
 
 <style scoped lang="less">
-  .scroll-wrap{
-    position:fixed;
-    top:88px;
-    left:0;right:0;bottom:0;
-    .scroll-container{
-      height:100%;
+  .scroll-wrap {
+    position: fixed;
+    top: 88px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .scroll-container {
+      height: 100%;
       overflow: hidden;
     }
   }
-  .recommend-list{
-    .list-title{
+
+  .recommend-list {
+    .list-title {
       height: 65px;
       line-height: 65px;
       text-align: center;
       font-size: 14px;
       color: #ffcd32;
     }
-    .item{
+    .item {
       display: flex;
       box-sizing: border-box;
       align-items: center;
       padding: 0 20px 20px 20px;
-      .icon{
+      .icon {
         flex: 0 0 60px;
         width: 60px;
         padding-right: 20px;
       }
-      .text{
+      .text {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -103,11 +108,11 @@
         overflow: hidden;
         font-size: 14px;
       }
-      .name{
+      .name {
         margin-bottom: 10px;
         color: #fff;
       }
-      .desc{
+      .desc {
         color: rgba(255, 255, 255, 0.3)
       }
     }
