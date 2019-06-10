@@ -9,9 +9,10 @@
             </div>
           </slide>
         </div>
-        <loading v-else title=""></loading>
+        <loading v-else title></loading>
         <div class="recommend-list">
           <h1 class="list-title">热门歌单推荐</h1>
+
           <ul>
             <li v-for="(item, _index) in discList" class="item" :key="_index">
               <div class="icon">
@@ -32,8 +33,8 @@
 
 <script>
 import slide from "@/base/Slide/Slide";
+import loading from "@/components/loading/loading";
 import Scroll from "@/base/scroll/scroll";
-import loading from "@/base/loading/loading";
 import { getRecommoned, getDiscList } from "@/api/getRecommoned.js";
 import { ERR_ON } from "@/api/config.js";
 
@@ -41,7 +42,8 @@ export default {
   name: "recommend",
   components: {
     slide,
-    Scroll,loading
+    Scroll,
+    loading
   },
   data() {
     return {
@@ -82,6 +84,7 @@ export default {
     overflow: hidden;
   }
 }
+
 .recommend-list {
   .list-title {
     height: 65px;
