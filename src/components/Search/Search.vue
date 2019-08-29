@@ -69,8 +69,7 @@ export default {
       });
     },
     addquery(query) {
-      //this.query = query;
-      //console.log(this.$refs);
+      query = query.replace(/(^\s*)|(\s*$)/g, "");
       this.$refs.searchBox.setQuery(query);
     },
     uploadQuery(newVal) {

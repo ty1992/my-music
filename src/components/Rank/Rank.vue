@@ -29,7 +29,7 @@ export default {
   name: "rank",
   data() {
     return {
-      topList: {}
+      topList: []
     };
   },
   components: {

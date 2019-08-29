@@ -1,7 +1,14 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-10 18:02:28
+ * @LastEditTime: 2019-08-29 11:44:58
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div class="song-list">
     <ul>
-      <li class="item" v-for="(song, index) in songList">
+      <li class="item" v-for="(song, index) in songList" :key="index">
         <div class="content">
           <h2 class="name">{{song.albumname}}</h2>
           <p class="desc">{{getDec(song)}}</p>

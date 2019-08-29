@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2018-04-16 22:22:46
+ * @LastEditTime: 2019-08-29 15:04:13
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div class="singer">
     <scroll
@@ -12,18 +19,24 @@
         <li class="list-group" v-for="item in singerList" :key="item.title">
           <h2 class="list-group-title">{{item.title}}</h2>
           <ul>
-            <li class="list-group-item" v-for="_item in item.list" :key="_item.id">
+            <li
+              class="list-group-item"
+              v-for="_item in item.list"
+              :key="_item.id"
+              @click="openDetail(_item)"
+            >
               <img class="avatar" :src="_item.avatar" lazy="loaded">
               <span class="name">{{_item.name}}</span>
             </li>
           </ul>
         </li>
       </ul>
+      <div class="list-fixed" ref="fixed" v-show="fixedTitle">
+        <div class="fixed-title">{{fixedTitle}}</div>
+      </div>
     </scroll>
     <loading v-if="!singerList.length"></loading>
-    <div class="list-fixed" ref="fixed" v-show="fixedTitle">
-      <div class="fixed-title">{{fixedTitle}} </div>
-    </div>
+
     <div class="list-shortcut">
       <ul @touchstart.stop.prevent="touch" @touchmove.stop.prevent="move" @touchend.stop>
         <li
@@ -35,6 +48,8 @@
         >{{item}}</li>
       </ul>
     </div>
+
+    <router-view></router-view>
   </div>
 </template>
 
@@ -44,6 +59,9 @@ import Singer from "common/js/Singer";
 import { ERR_ON } from "@/api/config";
 import scroll from "@/base/scroll/scroll";
 import loading from "@/base/loading/loading";
+import { mapMutations } from "vuex";
+
+var TITLE_HEIGHT = 28;
 export default {
   name: "singer",
   created() {
@@ -57,10 +75,12 @@ export default {
       singerItemHeights: [],
       scrollY: 0,
       touchs: {},
-      fixedTitle: ''
+      fixedTop: 0,
+      diff: -1
     };
   },
   methods: {
+    //内部请求接口
     _getSingerList() {
       getSingerList().then(res => {
         if (res.code == ERR_ON) {
@@ -68,6 +88,7 @@ export default {
         }
       });
     },
+    //格式化数据，返回需要的数据格式
     _normalList(list) {
       let map = {};
       let ret = [];
@@ -93,6 +114,7 @@ export default {
       });
       this._computedH();
     },
+    //动态的计算每个歌手板块的高度
     _computedH() {
       setTimeout(() => {
         var oLis = this.$refs.singerContainer.querySelectorAll(".list-group");
@@ -103,7 +125,6 @@ export default {
           h += oLis[i].clientHeight;
           this.singerItemHeights.push(h);
         }
-        console.log(this.singerItemHeights);
       }, 20);
     },
     scroll(pos) {
@@ -117,28 +138,49 @@ export default {
     },
     move(e) {
       this.touchY2 = e.touches[0].pageY;
-      this.shortcutIndex = parseInt((this.touchY2 - this.touchY1) / 18) + parseInt(this.touchs.currentIndex);
+      this.shortcutIndex =
+        parseInt((this.touchY2 - this.touchY1) / 18) +
+        parseInt(this.touchs.currentIndex);
       this._scrollTo(this.shortcutIndex);
     },
     _scrollTo(index) {
-      if(index < 0){
-         index = 0;
-      }else if(index > this.singerItemHeights.length - 2){
-         index = this.singerItemHeights.length - 2;
+      if (index < 0) {
+        index = 0;
+      } else if (index > this.singerItemHeights.length - 2) {
+        index = this.singerItemHeights.length - 2;
       }
       this.$refs.listview.scrollTo(0, -this.singerItemHeights[index], 0);
-    }
+    },
+    //点击歌手事件
+    openDetail(singer) {
+      this.setSinger(singer);
+      this.$router.push({ path: `/singer/${singer.id}` });
+    },
+    ...mapMutations({
+      setSinger: "SET_SINGER"
+    })
   },
   watch: {
-    scrollY(newVal){
-      for(var i = 0, len = this.singerItemHeights.length - 1; i < len; i++){
+    scrollY(newVal) {
+      this.diff = newVal;
+      for (var i = 0, len = this.singerItemHeights.length - 1; i < len; i++) {
         var height1 = this.singerItemHeights[i];
         var height2 = this.singerItemHeights[i + 1];
-        if(-newVal >= height1 && -newVal < height2){
+        if (-newVal >= height1 && -newVal < height2) {
           this.shortcutIndex = i;
+          this.diff = height2 + newVal;
           return;
         }
       }
+    },
+    diff(newVal) {
+      let fixedTop =
+        newVal > 0 && newVal < TITLE_HEIGHT ? newVal - TITLE_HEIGHT : 0;
+      if (this.fixedTop === fixedTop) {
+        return;
+      }
+      this.fixedTop = fixedTop;
+      this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`;
     }
   },
   computed: {
@@ -146,6 +188,14 @@ export default {
       return this.singerList.map(item => {
         return item.title;
       });
+    },
+    fixedTitle() {
+      if (this.scrollY > 0) {
+        return "";
+      }
+      return this.singerList[this.shortcutIndex]
+        ? this.singerList[this.shortcutIndex].title
+        : "";
     }
   }
 };
@@ -212,6 +262,20 @@ export default {
       &.current {
         color: #ffcd32;
       }
+    }
+  }
+  .list-fixed {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    .fixed-title {
+      height: 30px;
+      line-height: 30px;
+      padding-left: 20px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 12px;
+      background: #333;
     }
   }
 }

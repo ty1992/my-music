@@ -4,7 +4,7 @@
       <i class="icon-back"></i>
     </router-link>
     <h1 class="title" v-html="singer.name"></h1>
-    <div class="bg-image" :style="{backgroundImage:bgStyle}" ref="imgWrap">
+    <div class="bg-image" :style={bgStyle} ref="imgWrap">
       <div class="filter" ref="filter"></div>
     </div>
 
@@ -37,7 +37,7 @@
       }
     },
     created() {
-      this._songListInit()
+      this._songListInit();
     },
     methods: {
       _songListInit() {
@@ -68,12 +68,13 @@
       this.minTransalteY = this.heightTop - RESERVED_HEIGHT
     },
     computed: {
+      bgStyle(){
+        return 'color:red;'
+        //return 'background-image:' + this.singer.avatar;
+      },
       ...mapState([
         'singer'
-      ]),
-      bgStyle() {
-        return `url("https://y.gtimg.cn/music/photo_new/T001R300x300M000${this.singer.mid}.jpg?max_age=2592000`
-      }
+      ])
     },
     components: {
       scroll, songList
@@ -104,7 +105,7 @@
 
 <style scoped lang="less">
   .music-list {
-    position: fixed;
+    //position: fixed;
     z-index: 1000;
     top: 0;
     left: 0;

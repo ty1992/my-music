@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-10 18:02:28
+ * @LastEditTime: 2019-08-29 15:02:16
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div class="scroll-wrap">
     <scroll :data="discList" class="scroll-container">

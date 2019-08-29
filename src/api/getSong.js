@@ -1,4 +1,4 @@
-import {commonParams,options} from  './config.js';
+import { commonParams, options } from './config.js';
 import myJsonp from 'common/js/jsonp.js'
 
 export function getSongList(singerId) {

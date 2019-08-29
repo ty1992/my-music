@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2018-04-16 22:22:46
+ * @LastEditTime: 2019-08-29 09:39:49
+ * @LastEditors: Please set LastEditors
+ */
 'use strict'
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
@@ -13,9 +20,9 @@ module.exports = {
     proxyTable: {},
 
     // Various Dev Server settings
-    host: '192.168.2.140', // can be overwritten by process.env.HOST
+    host: '192.168.2.87', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: false,
+    autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
