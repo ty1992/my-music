@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-10 18:02:28
+ * @LastEditTime: 2019-09-02 09:46:45
+ * @LastEditors: Please set LastEditors
+ */
 import {commonParams,options} from  './config.js';
 import myJsonp from 'common/js/jsonp.js'
 

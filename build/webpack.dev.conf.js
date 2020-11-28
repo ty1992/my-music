@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2018-04-16 22:22:46
+ * @LastEditTime: 2019-09-02 10:23:49
+ * @LastEditors: Please set LastEditors
+ */
 'use strict'
 const utils = require('./utils')
 const webpack = require('webpack')
@@ -78,8 +85,26 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         }).catch((e) => {
           console.log(e)
         })
+      }),
+
+       // 获取歌词
+      app.get('/api/lyric', function(req, res){
+        const url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg';
+        axios.get(url, {
+          headers: {
+            referer: 'https://c.y.qq.com/',
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          console.log(response)
+        }).catch((e) => {
+          console.log(e)
+        })
       })
-    }
+    },
+
+   
   },
   plugins: [
     new webpack.DefinePlugin({

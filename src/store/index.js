@@ -21,7 +21,7 @@ var state = {
     full: false,
     songList: [],
     index: -1,
-    mode: playMode[0]
+    mode: playMode['loop']
   }
 };
 

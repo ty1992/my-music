@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-06-10 18:02:28
- * @LastEditTime: 2019-08-29 17:38:58
+ * @LastEditTime: 2019-08-30 16:22:59
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -26,10 +26,10 @@
       >
         <div class="song-list" style="padding:20px 30px;" ref="songList">
           <ul>
-            <li class="item" v-for="(song, index) in songList.list" :key="index" @click="selectItem(song, index)">
+            <li class="item" v-for="(song, index) in songList" :key="index" @click="selectItem(song, index)">
               <div class="content">
-                <h2 class="name">{{song.musicData.songname}}--{{song.musicData.albumname}}</h2>
-                <p class="desc">{{getDec(song.musicData)}}</p>
+                <h2 class="name">{{song.name}}--{{song.albumname}}</h2>
+                <p class="desc">{{song.singer}}</p>
               </div>
             </li>
           </ul>
@@ -43,6 +43,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { getSongList, cd } from "@/api/getSong";
+import { createSong } from '@/common/js/Song'
 import { ERR_ON } from "@/api/config";
 import scroll from "@/base/scroll/scroll";
 import loading from "@/components/loading/loading";
@@ -77,28 +78,23 @@ export default {
     _getSongList() {
       getSongList(this.singer.id).then(res => {
         if (res.code == ERR_ON) {
-          console.log(res.data)
-          this.songList = res.data;
+          this.songList = this._formatData(res.data.list);
         }
       });
     },
-    getDec(song) {
-      var { singer } = song;
-      var songListHtml = "";
-      singer.forEach(element => {
-        songListHtml += "/" + element.name;
-      });
-      return songListHtml.substring(1);
+    _formatData(data){
+      return data.map(item => {
+        return createSong(item)
+      })
     },
     scrolling(pos) {
       this.scrollY = pos.y;
     },
     selectItem(song, index){
       this.selectPlay({
-        list: this.songList.list,
+        list: this.songList,
         index
       })
-      console.log(index)
     },
     ...mapActions(['selectPlay'])
   },

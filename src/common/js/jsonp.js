@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2018-04-16 22:52:25
+ * @LastEditTime: 2019-09-02 09:39:53
+ * @LastEditors: Please set LastEditors
+ */
 import jsonpOrigin from 'jsonp';
 
 export default function myJsonp(url, data, option){
